@@ -39,6 +39,7 @@ const getSpan = (val, start = true) => {
 function JsonValidationResult(props) {
     return (
         <div>
+            {props.path.length === 1 ? "{" : ""}
             {Object.entries(props.data).map((entry) => {
                 const key = entry[0];
                 const val = entry[1];
@@ -60,6 +61,7 @@ function JsonValidationResult(props) {
                     </div>
                 );
             })}
+            {props.path.length === 1 ? "}" : ""}
         </div>
     )
 }

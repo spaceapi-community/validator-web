@@ -10,17 +10,26 @@ import ErrorIcon from '@material-ui/icons/Error';
 import { styled } from "@material-ui/core"
 import JsonValidationResult from "./JsonValidationResult"
 
+const listItemStyle = {
+    borderRadius: "15px",
+    marginTop: "15px",
+    marginBottom: "15px",
+};
+
 const SuccessListItem = styled(ListItem)({
+    ...listItemStyle,
     backgroundColor: "rgb(102, 255, 102)",
 });
 const WarnListItem = styled(ListItem)({
+    ...listItemStyle,
     backgroundColor: "rgb(255, 255, 102)",
 });
 const ErrorListItem = styled(ListItem)({
+    ...listItemStyle,
     backgroundColor: "rgb(255, 51, 0)",
 });
 
-const MyListItem = (props) => {
+const StyledListItem = (props) => {
     switch(props.type) {
         case 'warning':
             return (
@@ -49,51 +58,94 @@ function ValidationResult(props) {
 
     return (
         <List>
-            <MyListItem type={props.result.reachable ? 'success' : 'error'}>
-                <ListItemIcon>
-                    {props.result.reachable ? <CheckIcon /> : <ErrorIcon />}
-                </ListItemIcon>
-                <ListItemText primary="reachable" />
-            </MyListItem>
-            <MyListItem type={props.result.valid ? 'success' : 'error'}>
-                <ListItemIcon>
-                    {props.result.valid ? <CheckIcon /> : <ErrorIcon />}
-                </ListItemIcon>
-                <ListItemText primary="valid" />
-            </MyListItem>
-            {!props.result.isHttps && <MyListItem type={props.result.httpsForward ? 'success' : 'warning'}>
-                <ListItemIcon>
-                    {props.result.httpsForward ? <CheckIcon /> : <WarningIcon />}
-                </ListItemIcon>
-                <ListItemText primary="httpsForward" />
-            </MyListItem>}
-            <MyListItem type={props.result.isHttps ? 'success' : 'warning'}>
-                <ListItemIcon>
-                    {props.result.isHttps ? <CheckIcon /> : <WarningIcon />}
-                </ListItemIcon>
-                <ListItemText primary="isHttps" />
-            </MyListItem>
-            {showCertValid && <MyListItem type={props.result.certValid ? 'success' : 'error'}>
-                <ListItemIcon>
-                    {props.result.certValid ? <CheckIcon /> : <ErrorIcon />}
-                </ListItemIcon>
-                <ListItemText primary="certValid" />
-            </MyListItem>}
-            <MyListItem type={props.result.contentType ? 'success' : 'warning'}>
-                <ListItemIcon>
-                    {props.result.contentType ? <CheckIcon /> : <WarningIcon />}
-                </ListItemIcon>
-                <ListItemText primary="contentType" />
-            </MyListItem>
-            <MyListItem type={props.result.cors ? 'success' : 'warning'}>
-                <ListItemIcon>
-                    {props.result.cors ? <CheckIcon /> : <WarningIcon />}
-                </ListItemIcon>
-                <ListItemText primary="cors" />
-            </MyListItem>
-            {"{"}
+            {!props.result.reachable &&
+                <StyledListItem type={'error'}>
+                    <ListItemIcon>
+                        <ErrorIcon />
+                    </ListItemIcon>
+                    <ListItemText
+                        primary={"The provided URL is not reachable"}
+                        secondary={"Check your server something is wrong."}
+                    />
+                </StyledListItem>
+            }
+            {props.result.valid &&
+                <StyledListItem type={'success'}>
+                    <ListItemIcon>
+                        <CheckIcon />
+                    </ListItemIcon>
+                    <ListItemText
+                        primary="Checked JSON is valid!"
+                        secondary={"The checked JSON is valid against the SpaceAPI schema."}
+                    />
+                </StyledListItem>
+            }
+            {!props.result.valid &&
+                <StyledListItem type={'error'}>
+                    <ListItemIcon>
+                        <ErrorIcon />
+                    </ListItemIcon>
+                    <ListItemText
+                        primary="Checked JSON is invalid!"
+                        secondary={"The checked JSON is not valid against the SpaceAPI schema, check the details below."}
+                    />
+                </StyledListItem>
+            }
+            {!props.result.isHttps &&
+            !props.result.httpsForward &&
+                <StyledListItem type={'warning'}>
+                    <ListItemIcon>
+                        <WarningIcon />
+                    </ListItemIcon>
+                    <ListItemText
+                        primary="Your server is not forwarding HTTP calls to HTTPS"
+                        secondary={"Using your SpaceAPI file on a website that is using HTTPS is not possible, see [mixed content](https://developer.mozilla.org/en-US/docs/Web/Security/Mixed_content) for more information."}
+                    />
+                </StyledListItem>
+            }
+            {!props.result.isHttps &&
+                <StyledListItem type={'warning'}>
+                    <ListItemIcon>
+                        {props.result.isHttps ? <CheckIcon /> : <WarningIcon />}
+                    </ListItemIcon>
+                    <ListItemText
+                        primary="Your server is not reachable via HTTPS"
+                        secondary={"Using your SpaceAPI file on a website that is using HTTPS is not possible, see [mixed content](https://developer.mozilla.org/en-US/docs/Web/Security/Mixed_content) for more information."}
+                    />
+                </StyledListItem>
+            }
+            {!props.result.certValid &&
+            showCertValid &&
+                <StyledListItem type={'error'}>
+                    <ListItemIcon>
+                        <ErrorIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="certValid" />
+                </StyledListItem>
+            }
+            {props.result.contentType &&
+                <StyledListItem type={'warning'}>
+                    <ListItemIcon>
+                        <WarningIcon />
+                    </ListItemIcon>
+                    <ListItemText
+                        primary="Content-Type header missing"
+                        secondary={"The server is not providing the correct [Content-Type header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type)"}
+                    />
+                </StyledListItem>
+            }
+            {!props.result.cors &&
+                <StyledListItem type={'warning'}>
+                    <ListItemIcon>
+                        <WarningIcon />
+                    </ListItemIcon>
+                    <ListItemText
+                        primary={"CORS header not set"}
+                        secondary={"Your server is not providing CORS header, this stops other websites from using your file, you can find more information about it [here](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS)."}
+                    />
+                </StyledListItem>
+            }
             <JsonValidationResult data={props.result.validatedJson} error={props.result.schemaErrors} />
-            {"}"}
         </List>
     )
 }
@@ -103,12 +155,3 @@ ValidationResult.propTypes = {
 };
 
 export default ValidationResult
-
-/*
-            <pre>
-                {JSON.stringify(props.result.validatedJson, (key, value) => {
-                    console.log("----jkey----", key, "==== value ====", value)
-                    return value
-                }, 2)}
-            </pre>
- */
