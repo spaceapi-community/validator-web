@@ -44,9 +44,9 @@ function JsonValidationResult(props) {
                 const val = entry[1];
 
                 const pathString = `${props.path.join(".")}.${key}`;
-                const errorMessages = props.error
+                const errorMessages = props.error ? props.error
                     .filter((val) => val.field === pathString)
-                    .map((val) => val.message);
+                    .map((val) => val.message) : [];
                 const isError = errorMessages.length !== 0;
 
                 return (
