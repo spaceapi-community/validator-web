@@ -123,7 +123,7 @@ function ValidationResult(props) {
                     <ListItemText primary="certValid" />
                 </StyledListItem>
             }
-            {props.result.contentType &&
+            {!props.result.contentType &&
                 <StyledListItem type={'warning'}>
                     <ListItemIcon>
                         <WarningIcon />
