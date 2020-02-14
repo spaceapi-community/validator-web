@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -53,13 +53,10 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function App() {
+function App(props) {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
-  //https://status.chaospott.de/status.json
-  //https://spaceapi.attraktor.org/spaceapi.json
-  //https://status.ctdo.de/api/spaceapi/v13
-  const [urlValue, setUrlValue] = React.useState('https://spaceapi.attraktor.org/spaceapi.json');
+  const [urlValue, setUrlValue] = React.useState(props.checkUrl ? props.checkUrl : '');
   const [urlError, setUrlError] = React.useState(false);
   const [validationResult, setValidationResult] = React.useState('');
 
@@ -70,6 +67,21 @@ function App() {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
+  const validate = () => {
+    if (urlValue !== "") {
+      const api = new V2Api();
+      const validateUrlV2 = new ValidateUrlV2(urlValue);
+      api.v2ValidateURLPost(validateUrlV2).then(res => {
+        setValidationResult(res)
+        setUrlError(false)
+      })
+    } else {
+      setUrlError(true)
+    }
+  };
+
+  useEffect(validate, [])
 
   return (
     <div className={classes.root}>
@@ -99,19 +111,7 @@ function App() {
                   variant="contained"
                   color="primary"
                   fullWidth
-                  onClick={(event) => {
-                    if (urlValue !== "") {
-                      const api = new V2Api();
-                      const validateUrlV2 = new ValidateUrlV2(urlValue);
-                      api.v2ValidateURLPost(validateUrlV2).then(res => {
-                        setValidationResult(res)
-                        setUrlError(false)
-                      })
-                    } else {
-                      setUrlError(true)
-                    }
-
-                  }}
+                  onClick={validate}
               >
                 Validate
               </Button>
@@ -143,5 +143,13 @@ function App() {
     </div>
   );
 }
+
+App.propTypes = {
+  checkUrl: PropTypes.string,
+};
+
+App.defaultProps = {
+  checkUrl: ""
+};
 
 export default App;
