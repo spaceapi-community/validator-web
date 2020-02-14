@@ -52,6 +52,7 @@ function JsonValidationResult(props) {
 
                 return (
                     <div
+                        key={`entryline-${pathString}`}
                         style={{ backgroundColor: isError ? "rgb(255, 51, 0)" : "transparent"}}
                         title={errorMessages.join(", ")}
                     >
@@ -68,7 +69,7 @@ function JsonValidationResult(props) {
 
 JsonValidationResult.propTypes = {
     data: PropTypes.any.isRequired,
-    error: PropTypes.array.isRequired,
+    error: PropTypes.array,
     path: PropTypes.array,
     indention: PropTypes.number,
 };
@@ -76,6 +77,7 @@ JsonValidationResult.propTypes = {
 JsonValidationResult.defaultProps = {
     path: ["(root)"],
     indention: 2,
+    error: [],
 }
 
 export default JsonValidationResult

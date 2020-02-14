@@ -8,8 +8,10 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
+import { createMuiTheme } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import { ValidateUrlV2, V2Api } from '@spaceapi/validator-client';
+import { ThemeProvider } from '@material-ui/core/styles';
 import ValidationResult from './ValidationResult'
 import './App.css';
 
@@ -53,6 +55,17 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#ffffff',
+    },
+    secondary: {
+      main: '#173f5f',
+    },
+  },
+});
+
 function App(props) {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
@@ -81,66 +94,68 @@ function App(props) {
     }
   };
 
-  useEffect(validate, [])
+  useEffect(props.checkUrl ? validate : () => {}, [])
 
   return (
-    <div className={classes.root}>
-      <AppBar position="static">
-        <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
-          <Tab label="Validate URL" {...a11yProps(0)} />
-          <Tab label="Validate Direct Input" {...a11yProps(1)} />
-        </Tabs>
-      </AppBar>
-      <Container classes={{
-        root: classes.container,
-      }}>
-        <TabPanel value={value} index={0}>
-          <Grid container spacing={3}>
-            <Grid item xs={12} sm={10}>
+      <ThemeProvider theme={theme}>
+        <div className={classes.root}>
+          <AppBar position="static">
+            <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
+              <Tab label="Validate URL" {...a11yProps(0)} />
+              <Tab label="Validate Direct Input" {...a11yProps(1)} />
+            </Tabs>
+          </AppBar>
+          <Container classes={{
+            root: classes.container,
+          }}>
+            <TabPanel value={value} index={0}>
+              <Grid container spacing={3}>
+                <Grid item xs={12} sm={10}>
+                  <TextField
+                      error={urlError}
+                      variant="outlined"
+                      fullWidth
+                      label="URL"
+                      value={urlValue}
+                      onChange={handleTextInputChange}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={2}>
+                  <Button
+                      variant="contained"
+                      color="primary"
+                      fullWidth
+                      onClick={validate}
+                  >
+                    Validate
+                  </Button>
+                </Grid>
+              </Grid>
+            </TabPanel>
+            <TabPanel value={value} index={1}>
               <TextField
-                  error={urlError}
                   variant="outlined"
+                  rowsMax="20"
+                  rows="20"
+                  multiline
                   fullWidth
-                  label="URL"
-                  value={urlValue}
-                  onChange={handleTextInputChange}
+                  label="JSON"
               />
-            </Grid>
-            <Grid item xs={12} sm={2}>
               <Button
                   variant="contained"
                   color="primary"
                   fullWidth
-                  onClick={validate}
               >
                 Validate
               </Button>
-            </Grid>
-          </Grid>
-        </TabPanel>
-        <TabPanel value={value} index={1}>
-          <TextField
-              variant="outlined"
-              rowsMax="20"
-              rows="20"
-              multiline
-              fullWidth
-              label="JSON"
-          />
-          <Button
-              variant="contained"
-              color="primary"
-              fullWidth
-          >
-            Validate
-          </Button>
-        </TabPanel>
-        <Box>
-          {validationResult && <ValidationResult result={validationResult}/>}
-        </Box>
+            </TabPanel>
+            <Box>
+              {validationResult && <ValidationResult result={validationResult}/>}
+            </Box>
 
-      </Container>
-    </div>
+          </Container>
+        </div>
+      </ThemeProvider>
   );
 }
 

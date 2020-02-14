@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from "prop-types";
 import List from '@material-ui/core/List';
+import Link from '@material-ui/core/Link';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -99,7 +100,7 @@ function ValidationResult(props) {
                     </ListItemIcon>
                     <ListItemText
                         primary="Your server is not forwarding HTTP calls to HTTPS"
-                        secondary={"Using your SpaceAPI file on a website that is using HTTPS is not possible, see [mixed content](https://developer.mozilla.org/en-US/docs/Web/Security/Mixed_content) for more information."}
+                        secondary={<div>Using your SpaceAPI file on a website that is using HTTPS is not possible, see <Link href={"https://developer.mozilla.org/en-US/docs/Web/Security/Mixed_content"}>mixed content</Link> for more information.</div>}
                     />
                 </StyledListItem>
             }
@@ -110,7 +111,7 @@ function ValidationResult(props) {
                     </ListItemIcon>
                     <ListItemText
                         primary="Your server is not reachable via HTTPS"
-                        secondary={"Using your SpaceAPI file on a website that is using HTTPS is not possible, see [mixed content](https://developer.mozilla.org/en-US/docs/Web/Security/Mixed_content) for more information."}
+                        secondary={<div>Using your SpaceAPI file on a website that is using HTTPS is not possible, see <Link href={"https://developer.mozilla.org/en-US/docs/Web/Security/Mixed_content"}>mixed content</Link> for more information.</div>}
                     />
                 </StyledListItem>
             }
@@ -130,7 +131,7 @@ function ValidationResult(props) {
                     </ListItemIcon>
                     <ListItemText
                         primary="Content-Type header missing"
-                        secondary={"The server is not providing the correct [Content-Type header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type)"}
+                        secondary={<div>The server is not providing the correct <Link href={"https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type"}>Content-Type header</Link></div>}
                     />
                 </StyledListItem>
             }
@@ -141,7 +142,7 @@ function ValidationResult(props) {
                     </ListItemIcon>
                     <ListItemText
                         primary={"CORS header not set"}
-                        secondary={"Your server is not providing CORS header, this stops other websites from using your file, you can find more information about it [here](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS)."}
+                        secondary={<div>Your server is not providing CORS header, this stops other websites from using your file, you can find more information about it <Link href={"https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS"}>here</Link>.</div>}
                     />
                 </StyledListItem>
             }
