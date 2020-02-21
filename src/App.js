@@ -70,18 +70,23 @@ function App(props) {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
   const [urlValue, setUrlValue] = React.useState(props.checkUrl ? props.checkUrl : '');
+  const [jsonValue, setJsonValue] = React.useState('');
   const [urlError, setUrlError] = React.useState(false);
   const [validationResult, setValidationResult] = React.useState('');
 
-  const handleTextInputChange = event => {
+  const handleUrlTextInputChange = event => {
     setUrlValue(event.target.value);
+  };
+
+  const handleJsonTextInputChange = event => {
+    setJsonValue(event.target.value);
   };
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
-  const validate = () => {
+  const validateUrl = () => {
     if (urlValue !== "") {
       const api = new V2Api();
       const validateUrlV2 = new ValidateUrlV2(urlValue);
@@ -94,7 +99,14 @@ function App(props) {
     }
   };
 
-  useEffect(props.checkUrl ? validate : () => {}, [])
+  const validateJson = () => {
+    const api = new V2Api();
+    api.v2ValidateJSONPost(jsonValue).then(res => {
+      setValidationResult(res)
+    })
+  };
+
+  useEffect(props.checkUrl ? validateUrl : () => {}, [])
 
   return (
       <ThemeProvider theme={theme}>
@@ -117,7 +129,7 @@ function App(props) {
                       fullWidth
                       label="URL"
                       value={urlValue}
-                      onChange={handleTextInputChange}
+                      onChange={handleUrlTextInputChange}
                   />
                 </Grid>
                 <Grid item xs={12} sm={2}>
@@ -125,7 +137,7 @@ function App(props) {
                       variant="contained"
                       color="primary"
                       fullWidth
-                      onClick={validate}
+                      onClick={validateUrl}
                   >
                     Validate
                   </Button>
@@ -140,11 +152,13 @@ function App(props) {
                   multiline
                   fullWidth
                   label="JSON"
+                  onChange={handleJsonTextInputChange}
               />
               <Button
                   variant="contained"
                   color="primary"
                   fullWidth
+                  onClick={validateJson}
               >
                 Validate
               </Button>

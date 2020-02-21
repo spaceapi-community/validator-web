@@ -55,11 +55,12 @@ const StyledListItem = (props) => {
 };
 
 function ValidationResult(props) {
-    const showCertValid = props.result.isHttps || props.result.httpsForward
+    const showCertValid = props.result.isHttps === true
+        || props.result.httpsForward === true
 
     return (
         <List>
-            {!props.result.reachable &&
+            {props.result.reachable === false &&
                 <StyledListItem type={'error'}>
                     <ListItemIcon>
                         <ErrorIcon />
@@ -70,7 +71,7 @@ function ValidationResult(props) {
                     />
                 </StyledListItem>
             }
-            {props.result.valid &&
+            {props.result.valid === true &&
                 <StyledListItem type={'success'}>
                     <ListItemIcon>
                         <CheckIcon />
@@ -81,7 +82,7 @@ function ValidationResult(props) {
                     />
                 </StyledListItem>
             }
-            {!props.result.valid &&
+            {props.result.valid === false &&
                 <StyledListItem type={'error'}>
                     <ListItemIcon>
                         <ErrorIcon />
@@ -92,8 +93,8 @@ function ValidationResult(props) {
                     />
                 </StyledListItem>
             }
-            {!props.result.isHttps &&
-            !props.result.httpsForward &&
+            {props.result.isHttps === false &&
+            props.result.httpsForward === false &&
                 <StyledListItem type={'warning'}>
                     <ListItemIcon>
                         <WarningIcon />
@@ -104,18 +105,18 @@ function ValidationResult(props) {
                     />
                 </StyledListItem>
             }
-            {!props.result.isHttps &&
+            {props.result.isHttps === false &&
                 <StyledListItem type={'warning'}>
                     <ListItemIcon>
                         {props.result.isHttps ? <CheckIcon /> : <WarningIcon />}
                     </ListItemIcon>
                     <ListItemText
-                        primary="Your server is not reachable via HTTPS"
+                        primary="The URL is not HTTPS"
                         secondary={<div>Using your SpaceAPI file on a website that is using HTTPS is not possible, see <Link href={"https://developer.mozilla.org/en-US/docs/Web/Security/Mixed_content"}>mixed content</Link> for more information.</div>}
                     />
                 </StyledListItem>
             }
-            {!props.result.certValid &&
+            {props.result.certValid === false &&
             showCertValid &&
                 <StyledListItem type={'error'}>
                     <ListItemIcon>
@@ -124,7 +125,7 @@ function ValidationResult(props) {
                     <ListItemText primary="certValid" />
                 </StyledListItem>
             }
-            {!props.result.contentType &&
+            {props.result.contentType === false &&
                 <StyledListItem type={'warning'}>
                     <ListItemIcon>
                         <WarningIcon />
@@ -135,7 +136,7 @@ function ValidationResult(props) {
                     />
                 </StyledListItem>
             }
-            {!props.result.cors &&
+            {props.result.cors === false &&
                 <StyledListItem type={'warning'}>
                     <ListItemIcon>
                         <WarningIcon />
@@ -146,7 +147,7 @@ function ValidationResult(props) {
                     />
                 </StyledListItem>
             }
-            <JsonValidationResult data={props.result.validatedJson} error={props.result.schemaErrors} />
+            {props.result.validatedJson && <JsonValidationResult data={props.result.validatedJson} error={props.result.schemaErrors} />}
         </List>
     )
 }
