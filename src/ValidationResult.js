@@ -9,7 +9,7 @@ import CheckIcon from '@material-ui/icons/Check';
 import WarningIcon from '@material-ui/icons/Warning';
 import ErrorIcon from '@material-ui/icons/Error';
 import { styled } from "@material-ui/core"
-import JsonValidationResult from "./JsonValidationResult"
+import JsonValidationResult from "./JsonValidationResult";
 
 const listItemStyle = {
     borderRadius: "15px",
@@ -55,6 +55,8 @@ const StyledListItem = (props) => {
 };
 
 function ValidationResult(props) {
+    console.log(props.address)
+
     const showCertValid = props.result.isHttps === true
         || props.result.httpsForward === true
 
@@ -82,6 +84,17 @@ function ValidationResult(props) {
                     />
                 </StyledListItem>
             }
+            {props.address !== undefined &&
+            <StyledListItem type={'success'}>
+                <ListItemIcon>
+                    <CheckIcon />
+                </ListItemIcon>
+                <ListItemText
+                    primary={"We found an address to the provided geo coordinates!"}
+                    secondary={"It seems to be in " + props.address.country + ". Looking good."}
+                />
+            </StyledListItem>
+            }
             {props.result.valid === false &&
                 <StyledListItem type={'error'}>
                     <ListItemIcon>
@@ -92,6 +105,17 @@ function ValidationResult(props) {
                         secondary={"The checked JSON is not valid against the SpaceAPI schema, check the details below."}
                     />
                 </StyledListItem>
+            }
+            {props.address === undefined &&
+            <StyledListItem type={'warning'}>
+                <ListItemIcon>
+                    <WarningIcon />
+                </ListItemIcon>
+                <ListItemText
+                    primary={"Geo coordinates doesn't seem to have an address"}
+                    secondary={"Maybe longitude and latitude are switched?"}
+                />
+            </StyledListItem>
             }
             {props.result.isHttps === false &&
             props.result.httpsForward === false &&
@@ -154,6 +178,7 @@ function ValidationResult(props) {
 
 ValidationResult.propTypes = {
     result: PropTypes.object.isRequired,
+    address: PropTypes.object,
 };
 
 export default ValidationResult

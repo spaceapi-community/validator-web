@@ -8,6 +8,7 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
+import openGeocoder from "node-open-geocoder";
 import { createMuiTheme } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import { ValidateUrlV2, V2Api } from '@spaceapi/validator-client';
@@ -66,6 +67,8 @@ const theme = createMuiTheme({
   },
 });
 
+
+
 function App(props) {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
@@ -73,6 +76,7 @@ function App(props) {
   const [jsonValue, setJsonValue] = React.useState('');
   const [urlError, setUrlError] = React.useState(false);
   const [validationResult, setValidationResult] = React.useState('');
+  const [geocodedAddress, setGeocodedAddress] = React.useState({});
 
   const handleUrlTextInputChange = event => {
     setUrlValue(event.target.value);
@@ -86,12 +90,25 @@ function App(props) {
     setValue(newValue);
   };
 
+  const getAddressForGeocoordinates = (res) => {
+    if (res.validatedJson && res.validatedJson.location && res.validatedJson.location.lat && res.validatedJson.location.lon) {
+      openGeocoder()
+        .reverse(res.validatedJson.location.lon, res.validatedJson.location.lat)
+        .end((err, res) => {
+          if(err === null) {
+            setGeocodedAddress(res.address);
+          }
+        })
+    }
+  };
+
   const validateUrl = () => {
     if (urlValue !== "") {
       const api = new V2Api();
       const validateUrlV2 = new ValidateUrlV2(urlValue);
       api.v2ValidateURLPost(validateUrlV2).then(res => {
         setValidationResult(res)
+        getAddressForGeocoordinates(res)
         setUrlError(false)
       })
     } else {
@@ -103,6 +120,7 @@ function App(props) {
     const api = new V2Api();
     api.v2ValidateJSONPost(jsonValue).then(res => {
       setValidationResult(res)
+      getAddressForGeocoordinates(res)
     })
   };
 
@@ -164,7 +182,7 @@ function App(props) {
               </Button>
             </TabPanel>
             <Box>
-              {validationResult && <ValidationResult result={validationResult}/>}
+              {validationResult && <ValidationResult result={validationResult} address={geocodedAddress}/>}
             </Box>
 
           </Container>
