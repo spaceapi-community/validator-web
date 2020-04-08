@@ -53,7 +53,7 @@ function JsonValidationResult(props) {
                 return (
                     <div
                         key={`entryline-${pathString}`}
-                        style={{ backgroundColor: isError ? "rgb(255, 51, 0)" : "transparent"}}
+                        style={{ backgroundColor: isError ? "rgb(255,102,102)" : "transparent"}}
                         title={errorMessages.join(", ")}
                     >
                         <pre style={{margin:0}}>

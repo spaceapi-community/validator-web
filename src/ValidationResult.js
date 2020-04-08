@@ -6,6 +6,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import CheckIcon from '@material-ui/icons/Check';
+import InfoIcon from '@material-ui/icons/InfoOutlined';
 import WarningIcon from '@material-ui/icons/Warning';
 import ErrorIcon from '@material-ui/icons/Error';
 import { styled } from "@material-ui/core"
@@ -19,15 +20,19 @@ const listItemStyle = {
 
 const SuccessListItem = styled(ListItem)({
     ...listItemStyle,
-    backgroundColor: "rgb(102, 255, 102)",
+    backgroundColor: "rgb(100, 255, 100)",
+})
+const InfoListItem = styled(ListItem)({
+    ...listItemStyle,
+    backgroundColor: "rgb(170,170,255)",
 });
 const WarnListItem = styled(ListItem)({
     ...listItemStyle,
-    backgroundColor: "rgb(255, 255, 102)",
+    backgroundColor: "rgb(255,255,100)",
 });
 const ErrorListItem = styled(ListItem)({
     ...listItemStyle,
-    backgroundColor: "rgb(255, 51, 0)",
+    backgroundColor: "rgb(255,100,100)",
 });
 
 const StyledListItem = (props) => {
@@ -37,6 +42,12 @@ const StyledListItem = (props) => {
                 <WarnListItem>
                     {props.children}
                 </WarnListItem>
+            );
+        case 'info':
+            return (
+                <InfoListItem>
+                    {props.children}
+                </InfoListItem>
             );
         case 'success':
             return (
@@ -85,9 +96,9 @@ function ValidationResult(props) {
                 </StyledListItem>
             }
             {props.address !== undefined &&
-            <StyledListItem type={'success'}>
+            <StyledListItem type={'info'}>
                 <ListItemIcon>
-                    <CheckIcon />
+                    <InfoIcon />
                 </ListItemIcon>
                 <ListItemText
                     primary={"We found an address to the provided geo coordinates!"}
