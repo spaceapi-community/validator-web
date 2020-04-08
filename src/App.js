@@ -76,7 +76,7 @@ function App(props) {
   const [jsonValue, setJsonValue] = React.useState('');
   const [urlError, setUrlError] = React.useState(false);
   const [validationResult, setValidationResult] = React.useState('');
-  const [geocodedAddress, setGeocodedAddress] = React.useState({});
+  const [geocodedAddress, setGeocodedAddress] = React.useState(undefined);
 
   const handleUrlTextInputChange = event => {
     setUrlValue(event.target.value);
