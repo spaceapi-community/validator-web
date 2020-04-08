@@ -146,7 +146,7 @@ function ValidationResult(props) {
                         {props.result.isHttps ? <CheckIcon /> : <WarningIcon />}
                     </ListItemIcon>
                     <ListItemText
-                        primary="The URL is not HTTPS"
+                        primary="The URL is not using HTTPS"
                         secondary={<div>Using your SpaceAPI file on a website that is using HTTPS is not possible, see <Link href={"https://developer.mozilla.org/en-US/docs/Web/Security/Mixed_content"}>mixed content</Link> for more information.</div>}
                     />
                 </StyledListItem>
