@@ -1,4 +1,4 @@
-FROM node:latest as builder
+FROM node:14.8 as builder
 ADD . /app
 WORKDIR /app
 RUN npm install
