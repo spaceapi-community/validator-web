@@ -13,8 +13,10 @@ import { createMuiTheme } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import { ValidateUrlV2, V2Api } from '@spaceapi/validator-client';
 import { ThemeProvider } from '@material-ui/core/styles';
+import Toolbar from '@material-ui/core/Toolbar';
 import ValidationResult from './ValidationResult'
 import './App.css';
+import SpaceApiLogo from './spaceapi-avatar-dark.svg';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -130,10 +132,13 @@ function App(props) {
       <ThemeProvider theme={theme}>
         <div className={classes.root}>
           <AppBar position="static">
-            <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
-              <Tab label="Validate URL" {...a11yProps(0)} />
-              <Tab label="Validate Direct Input" {...a11yProps(1)} />
-            </Tabs>
+            <Toolbar variant={'dense'}>
+              <img src={SpaceApiLogo} style={{ width: 40 }} />
+              <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
+                <Tab label="Validate URL" {...a11yProps(0)} />
+                <Tab label="Validate Direct Input" {...a11yProps(1)} />
+              </Tabs>
+            </Toolbar>
           </AppBar>
           <Container classes={{
             root: classes.container,
