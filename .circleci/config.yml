@@ -30,15 +30,3 @@ workflows:
             branches:
               only:
                 - master
-
-  # Build every week on Monday at 05:00 am
-  weekly:
-    triggers:
-      - schedule:
-          cron: "0 5 * * 1"
-          filters:
-            branches:
-              only:
-                - master
-    jobs:
-      - build:
