@@ -25,10 +25,7 @@ workflows:
   # Build on push to master
   on_push:
     jobs:
-      - test
       - build:
-          requires:
-            - test
           filters:
             branches:
               only:
@@ -44,7 +41,6 @@ workflows:
               only:
                 - master
     jobs:
-      - test
       - build:
           requires:
             - test
