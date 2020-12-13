@@ -91,7 +91,13 @@ function ValidationResult(props) {
                     </ListItemIcon>
                     <ListItemText
                         primary="Checked JSON is valid!"
-                        secondary={"The checked JSON is valid against the SpaceAPI schema."}
+                        secondary={
+                            <div>
+                                The checked JSON is valid against the SpaceAPI schema.<br /><br />
+                                Its valid for following versions:<br />
+                                {props.result.checkedVersions.map(ele => <div>{ele}</div>)}
+                            </div>
+                        }
                     />
                 </StyledListItem>
             }
